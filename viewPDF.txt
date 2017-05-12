@@ -1,0 +1,14 @@
+<apex:page controller="ViewPDFController" >
+
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!pdfList}" var="pdf" columns="2" columnsWidth="20%,20%" CELLSPACING="20" CELLPADDING="0"> 
+            <apex:column value="{!pdf.CreatedDate}">
+            </apex:column> 
+            <apex:column headerValue="Challan PDF">
+                <apex:outputLink value="{!pdf.id}">{!pdf.Name}
+                </apex:outputLink>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+</apex:page>

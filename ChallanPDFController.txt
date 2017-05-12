@@ -1,0 +1,44 @@
+public class challanPDFController {
+    public String challan { get; set; }
+    public String vehicleValue {get; set;}
+    public String violationValue {get; set;}
+    public Integer fineValue {get; set;}
+    public String locationValue {get; set;}
+    public String policeOfficer {get; set;}
+    public String challanValue {get; set;}
+    public String ownerName {get; set;}
+    public String ownerAddress {get; set;}
+    public DateTime dateAndTime {get; set;}
+    public Id challanID {get; set;}
+    public List<Challan_Detail__c> challanList {get; set;} 
+    public Boolean showPhoto {set;get;}
+    List<Attachment> attachList;
+    
+    public challanPDFController(){
+        showPhoto = false;
+        challanID = ApexPages.currentPage().getParameters().get('cid');
+        challanList = [Select Id, CreatedBy.Name, Challan_Number__c, Address__c, Fine__c, Location_of_violation__c, Owner_name__c, Vehicle_Number__c, 
+                       Violation_type__c, DateTime__c
+                       From Challan_Detail__c where Id =: challanID limit 1];
+        if(challanList != null && challanList.size() > 0){
+            vehicleValue = challanList[0].Vehicle_Number__c;
+            ownerName = challanList[0].Owner_name__c;
+            ownerAddress = challanList[0].Address__c;
+            fineValue = integer.valueOf(challanList[0].Fine__c);
+            violationValue = challanList[0].Violation_type__c;
+            locationValue = challanList[0].Location_of_violation__c;
+            challanValue = challanList[0].Challan_Number__c;
+            dateAndTime = challanList[0].DateTime__c;
+            policeOfficer = challanList[0].CreatedBy.Name;
+        }
+    }
+    public String getImageId() {
+        String imageId = '';
+        attachList = [Select Id, Name, Body, ParentId From Attachment where ParentId =: challanList[0].Id order By LastModifiedDate DESC limit 1];
+        if(attachList != null && attachList.size() > 0){
+            showPhoto = true;
+            imageId = attachList[0].Id;
+        }
+        return imageId;  
+    }
+}

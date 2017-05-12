@@ -1,0 +1,75 @@
+public without sharing class ReportController {
+    public Id ownerID {get; set;} 
+    public Id violationID {get; set;} 
+    public String vehicleValue{get; set;}
+    public String violationValue{get; set;}
+    public Integer fineValue{get; set;}
+    public String ownerName{get; set;}
+    public String ownerAddress{get; set;}
+    public String locationValue{get; set;}
+    public String challanValue{get; set;}
+    public List<Owner_detail__c> vehicleList1{get; set;}
+    public List<Violation__c> violationList1{get; set;} 
+    List<Violation__c> violationList ; 
+    public Challan_Detail__c challanDetail{get; set;}
+    public blob file { get; set; }
+    public DateTime myDateTime { get; set; }
+    public List<Challan_Detail__c> challanList{ get; set; }
+    
+    public ReportController(){ 
+        ownerID = ApexPages.currentPage().getParameters().get('oid');
+        violationID = ApexPages.currentPage().getParameters().get('vid');
+        locationValue = ApexPages.currentPage().getParameters().get('loc');
+        vehicleList1 = [Select Id, Vehicle_Number__c, Owner_name__c, Phone_number__c, Address__c from Owner_detail__c where Id =: ownerID];
+        if(vehicleList1 != null && vehicleList1.size() > 0){
+            vehicleValue = vehicleList1[0].Vehicle_Number__c;
+            ownerName = vehicleList1[0].Owner_name__c;
+            ownerAddress = vehicleList1[0].Address__c;
+        }
+        violationList1 = [Select Id, Violation_type__c,Fine__c from Violation__c where Id =: violationID];
+        if(violationList1 != null && violationList1.size() > 0){
+            violationValue = violationList1[0].Violation_type__c;
+            fineValue = integer.valueOf(violationList1[0].Fine__c);
+        }
+        myDateTime = System.now();
+    }
+    public void createChallan(){
+        challanDetail = new Challan_Detail__c();
+        challanDetail.Owner_name__c = vehicleList1[0].Owner_name__c;
+        challanDetail.Vehicle_Number__c = vehicleList1[0].Vehicle_Number__c;
+        challanDetail.Address__c = vehicleList1[0].Address__c;
+        challanDetail.Location_of_violation__c = locationValue;
+        challanDetail.Violation_type__c = violationList1[0].Violation_type__c;
+        challanDetail.Fine__c = violationList1[0].Fine__c;
+        challanDetail.DateTime__c = myDateTime;
+        insert challanDetail;
+        challanList = [Select ID, Challan_Number__c From Challan_Detail__c 
+                                                where id =: challanDetail.id  limit 1]; 
+        //challanValue = challanDetail.Challan_Number__c;
+        challanValue = challanList[0].Challan_Number__c;
+    }
+    
+    public void upload() {
+        Attachment attachment = new Attachment();
+        attachment.Body = file;
+        attachment.Name = String.valueOf('challanimage'+challanList[0].Challan_Number__c+'.png');
+        attachment.ParentId = challanDetail.Id;
+        attachment.ContentType = 'image/png';
+        insert attachment;
+    }
+    
+    public PageReference generateAsPDF(){
+        PageReference pdf = Page.pdfchallan;
+        pdf.getParameters().put('cid',(String)challanDetail.Id);
+        Blob b = pdf.getContent();
+        Attachment pdf1 = new Attachment();
+        pdf1.Body = b;
+        pdf1.Name = String.valueOf('challanpdf'+challanValue+'.pdf');
+        pdf1.ParentId = challanDetail.Id;
+        pdf1.ContentType = 'application/pdf';
+        insert pdf1;
+        PageReference newPage = new PageReference('/apex/pdfchallan?cid='+challanDetail.Id);
+        newPage.setRedirect(true);
+        return newPage;
+    }
+}

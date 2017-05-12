@@ -1,0 +1,24 @@
+<apex:page sidebar="false" standardStylesheets="true" docType="html-5.0" controller="ReportController"  
+    action="{!createChallan}" tabstyle="Challan_Detail__c">
+    <center>
+        <apex:outputText style="font-style:normal; font-family: 'Open Sans'; margin: -20px -20px 21px;line-height: 50px; font-size: 30px;font-weight: 400;
+                color: #555; text-align: center;" value="E-Challan System"/>
+    </center>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection title="CHALLAN" collapsible="false" columns="1">
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Challan Number : {!challanValue}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Vehicle Number : {!vehicleValue}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Owner Name : {!ownerName}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Owner Address : {!ownerAddress}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Violation : {!violationValue}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Location : {!locationValue}</p>
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Date and Time : {!myDateTime}</p>               
+                <p style="font-family: 'Open Sans'; font-size: 20px; font-weight: 400;"> Fine : {!fineValue}</p>
+                <apex:inputFile value="{!file}" />
+                <apex:commandbutton action="{!upload}" value="Upload" style="font-size:11px; color:black; background:white; width: 100px;" />                      
+                <apex:commandButton action="{!generateAsPDF}" value="Save as PDF" style="font-size: 13px; color: black; background:white; width: 100px;" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

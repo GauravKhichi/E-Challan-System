@@ -1,0 +1,105 @@
+<apex:page standardStylesheets="true" sidebar="false" controller="VehicleController" docType="html-5.0" tabstyle="Create_Challan__tab">
+
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
+    
+    <style> body{background-color:white;border: 1px solid #c6c6c6;} </style>
+    
+    <apex:form id="eForm">  
+        <apex:actionRegion >
+            <center>
+                <apex:outputText style="font-style:normal; font-family: 'Open Sans'; margin: -20px -20px 50px; line-height: 50px; font-size: 30px; 
+                                font-weight: 400;color: #555; text-align: center;" 
+                                value="E-Challan System"/>          
+            </center>
+            <apex:pageMessages />
+            <apex:pageBlock >
+                <apex:pageBlockSection collapsible="false" columns="3">
+                    <center>
+                        <label for = "vehicleNumber" style="font-size: 18px;">
+                            Enter Vehicle Number         
+                        </label> 
+                        <apex:inputText style="margin: 5px; padding: 0 10px; width: 200px; height: 34px; border: 1px solid #ccc;box-sizing: border-box;" 
+                                        id="vehicleNumber" required="true" value="{!vehicleNumber}" html-placeholder="Enter vehicle number"/>
+                    
+                    
+                        <apex:commandButton action="{!proceed}" style="font-size: 13px; background:white; width: 75px; padding:10px;" 
+                                            value="Next" rerender="eForm" status="waitLoadingBootstrap"/>
+                    </center>
+                    <br/>
+                    <apex:outputPanel rendered="{!showForm}">
+                        
+                            <label style="font-size: 18px;">
+                                Enter Violation        
+                            </label>
+                            <apex:selectList style="margin: 5px; padding: 0 10px; width: 300px; height: 34px;border: 1px solid #ccc;box-sizing: border-box;" 
+                                             value="{!violationType}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!violationList}" />
+                            </apex:selectList>
+                            <apex:inputText style="margin: 5px; padding: 0 10px; width: 250px; height: 34px; border: 1px solid #ccc;box-sizing: border-box;" 
+                                        id="location" required="true" value="{!location}" html-placeholder="Enter location"/>
+                            <center>
+                                <apex:commandButton action="{!submitVN}" style="font-size:13px; color:black; background:white; width: 100px; padding:10px;" 
+                                            value="Submit" />
+                            </center>
+                        
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+            </apex:pageBlock> 
+            
+            <apex:actionStatus id="waitLoadingBootstrap">
+                    <apex:facet name="start">
+                        <div class="container-fluid waitLoadingDiv darkClass">
+                            <div class="row">
+                                <div class="col-md-12" style="margin-top:50vh;">
+                                    <div class="progress alert-fixed">
+                                        <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            <span class="sr-only"></span>
+                                            <strong>
+                                                <center><span style="color:white">Please Wait...</span></center>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>            
+                    </apex:facet>
+            </apex:actionStatus>          
+            <style>
+                .progress-bar-danger {
+                    background-color: #FD0700;
+                }
+            </style>           
+            <style>
+                div.requiredInput{
+                    display: inline !important;
+                }              
+                .darkClass
+                {
+                    background-color: black;
+                    filter:alpha(opacity=50); /* IE */
+                    opacity: 0.5; /* Safari, Opera */
+                    -moz-opacity:0.50; /* FireFox */
+                    z-index: 20;
+                    height: 100%;
+                    width: 100%;
+                    background-repeat:no-repeat;
+                    background-position:center;
+                    position:fixed;
+                    top: 0px;
+                    left: 0px;
+                } 
+                .waitLoadingDiv
+                {
+                    position: fixed;
+                    z-index: 999;
+                    overflow: show;
+                    margin: auto;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                }
+            </style>
+        </apex:actionRegion>
+    </apex:form>
+</apex:page>

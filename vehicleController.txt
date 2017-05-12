@@ -1,0 +1,64 @@
+public class VehicleController {
+    public String vehicleNumber {get;set;}
+    public Boolean isValidationError {get;set;}
+    public Boolean showForm {get;set;}
+    public String violationType{get;set;}
+    public String location{get;set;}
+    public Owner_detail__c ownerDetail{get;set;}
+    List<Owner_detail__c> vehicleList;
+    List<Violation__c> violationList1;
+    public blob file { get; set; }
+    
+    public String getVehicleNumber() {return vehicleNumber;}
+    public void setvehicleNo(String newVN){
+        this.vehicleNumber = newVN;
+    }
+    public VehicleController(){
+        isValidationError = false;
+        showForm = false;
+        ownerDetail = new Owner_detail__c();
+    }
+    public void proceed(){
+        vehicleList = [Select ID, Vehicle_Number__c From Owner_detail__c where Vehicle_Number__c=:vehicleNumber limit 1]; 
+        if(vehicleList == null || vehicleList.size() == 0){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,'Please enter Valid Vehicle Number!!'));
+            isValidationError = true;
+        }
+        if(isValidationError){
+            return;
+        }else{
+            showForm = true;
+            ownerDetail  = vehicleList[0];
+        }
+    }
+    public list<SelectOption> violationList{
+        get{
+            list<SelectOption> st= new list<SelectOption>();
+            List<Violation__c> violationList1 = [Select Id,Violation_type__c From Violation__c limit 100];
+            st.add(new SelectOption('-None-', '-None-'));
+            for(Violation__c v: violationList1)
+            {
+                st.add(new SelectOption(v.Id, v.Violation_type__c));
+            }
+            return st;
+           }
+        set; 
+    }
+    public String getLocation() {return location;}
+    public void setLocation(String newLoc){
+        this.location= newLoc;
+    }  
+    /*public PageReference upload() {
+        ContentVersion v = new ContentVersion();
+        v.versionData = file;
+        v.title = 'testing upload';
+        v.pathOnClient ='/somepath.txt';
+        insert v;
+        return new PageReference('/' + v.id);
+    }*/
+    public PageReference submitVN() {   
+        PageReference newPage = new PageReference('/apex/report?oid='+ownerDetail.Id+'&vid='+violationType+'&loc='+location);
+        newPage.setRedirect(true);
+        return newPage;
+    }
+}

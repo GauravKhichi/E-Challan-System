@@ -1,0 +1,7 @@
+public class ViewPDFController {
+    public static List<Attachment> pdfList{get; set;}
+    
+    public ViewPDFController (){
+        pdfList = [Select Id, Name, CreatedDate from Attachment where ContentType = 'application/pdf' order by CreatedDate DESC limit 1000];
+    }
+}

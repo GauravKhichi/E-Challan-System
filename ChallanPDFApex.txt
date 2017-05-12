@@ -1,0 +1,45 @@
+<apex:page sidebar="false" standardStylesheets="true" tabstyle="Challan_Detail__c" controller="challanPDFController" renderAs="pdf">   
+    <h1> TRAFFIC POLICE DEPARTMENT </h1>
+    <apex:form >
+        <p> To, </p>
+        <p> Sir/Madam {!ownerName}, </p>
+        <p> {!ownerAddress} </p>
+        
+        <apex:image value="data:image; base64, {!image}" url="/servlet/servlet.FileDownload?file={!imageId}" height="10%" width="10%"/>
+        <table style = "width:80%" border = "1" cellpadding = "5" cellspacing = "5" var="challan" value="challanList">
+            <tr>
+                <td> Challan Number </td>
+                <td> {!challanValue} </td>
+            </tr>
+            <tr>
+                <td> Vehicle Number </td>
+                <td> {!vehicleValue} </td>
+            </tr>
+            <tr>
+                <td> Location </td>
+                <td> {!locationValue} </td>
+            </tr>
+            <tr>
+                <td> Police Officer </td>
+                <td> {!policeOfficer} </td>
+            </tr>
+            <tr>
+                <td> Violation </td>
+                <td> {!violationValue} </td>
+            </tr>
+            <tr>
+                <td> Date and Time </td>
+                <td> {!dateAndTime} </td>
+            </tr>
+            <tr>
+                <td> Fine </td>
+                <td> {!fineValue} </td>
+            </tr>
+        </table>
+        <p> As per above given timing the driver of vehicle number {!vehicleValue} has been caught for "{!violationValue}". You are caught for not 
+            following the rule 129/177 generated in the year 1988. This is to notify the owner of the vehicle that according to the offense a challan 
+            case has been generated on you and hence a fine of Rs.{!fineValue} is to be paid within 15 days of receiving this challan at specified police 
+            station. 
+            Otherwise strict action will be taken against you in court. </p> 
+    </apex:form>
+</apex:page>

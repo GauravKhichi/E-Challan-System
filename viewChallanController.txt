@@ -1,0 +1,13 @@
+public class viewChallanController {
+    public Integer srNo {get; set;}
+    //public String challanNo {get; set;}
+    List<Challan_Detail__c> viewChallanList;
+    
+    public List<Challan_Detail__c> getviewChallanList(){
+            if(viewChallanList == null){
+                viewChallanList = [SELECT Id, Challan_Number__c, CreatedDate FROM Challan_Detail__c order by CreatedDate DESC LIMIT 10];
+                //challanNo = viewChallanList[i].Challan_Number__c;
+            }
+            return viewChallanList;
+    }
+}
